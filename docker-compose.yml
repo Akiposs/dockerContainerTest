@@ -1,19 +1,9 @@
 version: '2'
 
 services:
-  php:
-    container_name: php
-    build: ./php
+  rails:
+    build: ./ruby
+    container_name: railsTest
     volumes:
-    - ./server:/var/www
-
-  nginx:
-    image: nginx
-    container_name: nginx
-    ports:
-    - 80:80
-    volumes:
-    - ./server:/var/www
-    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-    - php
+    - ../../var/www:/var/www
+    tty: true

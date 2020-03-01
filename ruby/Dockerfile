@@ -3,7 +3,7 @@ FROM centos:centos8
 LABEL maintainer="Akipon <test@test.com>"
 
 # 必要なライブラリダウンロード
-RUN yum update && yum install -y \
+RUN yum update -y && yum install -y \
   sudo\
   git\
   make\
@@ -16,18 +16,19 @@ RUN yum update && yum install -y \
   sqlite-devel\
   mercurial\
   ncurses-devel
-
-#rbenvクローン
-RUN git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+  
 #rbenvのPATH登録
-ENV PATH /.rbenv/bin:$PATH
-#bash_profile更新
-RUN source ~/.bash_profile
-#ruby-buildクローン
-RUN git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+ENV PATH $PATH:~/.rbenv/bin
 
-RUN gem install bundle
-RUN gem install rails
-RUN gem install sassc -v '2.2.1' --source 'https://rubygems.org/'
-RUN  install sqlite3 -v '1.4.2' --source 'https://rubygems.org/'
+#rbenv・ruby-buildクローン、rubyインストール・設定反映・グローバルver設定・
+#バンドラーインストール・railsインストール、sasscインストール、sqllite3インストール
+RUN git clone https://github.com/sstephenson/rbenv.git ~/.rbenv && \
+git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build && \
+  rbenv install -v 2.7.0 && \
+  rbenv rehash && \
+  rbenv global 2.0.0-p353 && \
+  gem install bundle && \
+  gem install rails && \
+  gem install sassc -v '2.2.1' --source 'https://rubygems.org/' && \
+  gem install sqlite3 -v '1.4.2' --source 'https://rubygems.org/'
 EXPOSE 80
