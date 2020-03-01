@@ -1,20 +1,19 @@
 version: '2'
+
 services:
-  app:
-    build: laravel
-    depends_on: 
-      - db
-  db:
-    build: mysql
-    environment: 
-      MYSQL_ROOT_PASSWORD: root
-  web:
-    build: nginx
-    ports: 
-      - 80:80
-      volumes: 
-        - ./nginx/log:/var/log/nginx
-      volumes_from: 
-        - app
-      depends_on: 
-        - app
+  php:
+    container_name: php
+    build: ./php
+    volumes:
+    - ./server:/var/www
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+    - 80:80
+    volumes:
+    - ./server:/var/www
+    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - php
