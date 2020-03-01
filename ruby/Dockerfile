@@ -15,22 +15,28 @@ RUN yum update -y && yum install -y \
   gcc-c++\
   sqlite-devel\
   mercurial\
-  ncurses-devel
+  ncurses-devel &&\
+  yum clean all
 
-
-
-#rbenv・ruby-buildクローン、rubyインストール・設定反映・グローバルver設定・
-#バンドラーインストール・railsインストール、sasscインストール、sqllite3インストール
+#rbenv
 RUN git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
-#rbenvのPATH登録
-ENV PATH $PATH:~/.rbenv/bin
 
+#rbenvのPATH登録
+ENV PATH $PATH:~/.rbenv
+
+#ruby-buildクローン、rubyインストール・設定反映・グローバルver設定・
+#バンドラーインストール・railsインストール、sasscインストール、sqllite3インストール
 RUN git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
-# RUN rbenv install -v 2.7.0 
-# RUN rbenv rehash
-# RUN rbenv global 2.0.0-p353
-# RUN gem install bundle
-# RUN gem install rails
-# RUN gem install sassc -v '2.2.1' --source 'https://rubygems.org/'
-# RUN gem install sqlite3 -v '1.4.2' --source 'https://rubygems.org/'
+RUN ~/.rbenv/bin/rbenv install -v 2.7.0
+RUN ~/.rbenv/bin/rbenv rehash
+RUN ~/.rbenv/bin/rbenv global 2.7.0
+
+
+RUN ~/.rbenv/shims/gem install bundle
+RUN ~/.rbenv/shims/gem install sassc -v '2.2.1' --source 'https://rubygems.org/'
+RUN ~/.rbenv/shims/gem install sqlite3 -v '1.4.2' --source 'https://rubygems.org/'
+RUN ~/.rbenv/shims/gem install rails
+
 EXPOSE 80
+
+CMD /bin/bash
